@@ -509,6 +509,21 @@ class _SlidingUpPanelState extends State<SlidingUpPanel>
     if (widget.slideDirection == SlideDirection.DOWN)
       visualVelocity = -visualVelocity;
 
+    // if velocity is zero (ontap action) open the panel to the next position
+    if (v == Velocity.zero) {
+      if (_isPanelClosed) {
+        if (widget.snapPoint != null) {
+          _flingPanelToPosition(widget.snapPoint!, visualVelocity);
+        } else {
+          _open();
+        }
+        return;
+      } else if (_isPanelSnapped) {
+        _open();
+        return;
+      }
+    }
+
     // get minimum distances to figure out where the panel is at
     double d2Close = _ac.value;
     double d2Open = 1 - _ac.value;
@@ -639,6 +654,12 @@ class _SlidingUpPanelState extends State<SlidingUpPanel>
   //returns whether or not the
   //panel is closed
   bool get _isPanelClosed => _ac.value == 0.0;
+
+  //returns whether or no
+  //the panel is at the snap position
+  bool get _isPanelSnapped => widget.snapPoint == null
+      ? false
+      : (_ac.value - widget.snapPoint!).abs() < 0.001;
 
   //returns whether or not the
   //panel is shown/hidden
