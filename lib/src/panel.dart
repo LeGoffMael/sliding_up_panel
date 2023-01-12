@@ -510,18 +510,13 @@ class _SlidingUpPanelState extends State<SlidingUpPanel>
       visualVelocity = -visualVelocity;
 
     // if velocity is zero (ontap action) open the panel to the next position
-    if (v == Velocity.zero) {
-      if (_isPanelClosed) {
-        if (widget.snapPoint != null) {
-          _flingPanelToPosition(widget.snapPoint!, visualVelocity);
-        } else {
-          _open();
-        }
-        return;
-      } else if (_isPanelSnapped) {
+    if (v == Velocity.zero && _isPanelClosed) {
+      if (widget.snapPoint != null) {
+        _flingPanelToPosition(widget.snapPoint!, visualVelocity);
+      } else {
         _open();
-        return;
       }
+      return;
     }
 
     // get minimum distances to figure out where the panel is at
